@@ -28,7 +28,7 @@ from utils.form import get_form_data
 from utils.config import config_stylesheet, style_container_buttons, style_page_content
 from controller.callbacks import register_callbacks
 
-from backend.Algorithms.GrafoBipartito import GrafoBipartito
+from backend.GrafoBipartito import GrafoBipartito
 
 
 app = dash.Dash(

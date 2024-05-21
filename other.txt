@@ -1,0 +1,135 @@
+def decomposition(ns, cs, cs_value, probabilities, states):
+    memory = {}
+    print("Probabilities")
+    for probabilitie in probabilities:
+        print(probabilitie)
+    print("**********************************************************")
+
+    print("Sistema original")
+    print(f"{ns}ᵗ⁺¹ | {cs}ᵗ")
+    original_system = probabilityTransitionTable(
+        cs_to_array(cs, cs_value), ns_to_array(ns), probabilities, states
+    )
+
+    # Asegurarse de que original_system es un array de NumPy
+    original_system = np.array(original_system)
+
+    print("**********************************************************")
+    print(original_system)
+    memory = {}
+
+    impresos = set()
+
+    best_partition = None
+    min_emd = float("inf")
+    best_combination = None
+
+    def descomponer(ns, cs, memory, states):
+        if (cs, tuple(ns)) in memory:
+            print("get in memory")
+            return memory[(cs, tuple(ns))]
+
+        if len(ns) == 1:
+            value = probabilityTransitionTable(
+                cs_to_array(cs, cs_value), ns_to_array(ns), probabilities, states
+            )
+            value = np.array(value)  # Convertir a array de NumPy
+            memory[(cs, tuple(ns))] = value
+            return value
+
+        value = None
+        for i in range(len(ns)):
+            sub_value = descomponer([ns[i]], cs, memory, states)
+            if value is None:
+                value = sub_value
+            else:
+                cross_product = np.kron(value, sub_value)
+                value = reorder_cross_product(cross_product)
+
+            memory[(cs, tuple(ns[: i + 1]))] = value
+
+        # Asegurarse de que el valor final no sea None
+        if value is None:
+            value = np.array([])
+
+        memory[(cs, tuple(ns))] = value
+        return value
+
+    for lenNs in range(1, len(ns) + 1):
+        for i in range(len(ns) - lenNs + 1):
+            j = i + lenNs - 1
+            ns1, ns2 = ns[i : j + 1], ns[:i] + ns[j + 1 :]
+
+            for lenCs in range(len(cs) + 1):
+                for x in range(len(cs) - lenCs + 1):
+                    z = x + lenCs - 1
+                    cs1, cs2 = cs[x : z + 1], cs[:x] + cs[z + 1 :]
+
+                    combinacion_actual = (
+                        (tuple(ns1), tuple(cs1)),
+                        (tuple(ns2), tuple(cs2)),
+                    )
+                    combinacion_inversa = (
+                        (tuple(ns2), tuple(cs2)),
+                        (tuple(ns1), tuple(cs1)),
+                    )
+
+                    if (
+                        combinacion_actual not in impresos
+                        and combinacion_inversa not in impresos
+                    ):
+                        print(f"({ns2} | {cs2})", f" * ({ns1} | {cs1})")
+                        arr1 = descomponer(ns2, cs2, memory, states)
+                        arr2 = descomponer(ns1, cs1, memory, states)
+
+                        # Asegurarse de que arr1 y arr2 no sean None
+                        if arr1 is None:
+                            arr1 = np.array([])
+                        if arr2 is None:
+                            arr2 = np.array([])
+
+                        partitioned_system = []
+
+                        if arr1.size > 0 and arr2.size > 0:
+                            cross_product = np.kron(arr1, arr2)
+                            partitioned_system = reorder_cross_product(cross_product)
+                        elif arr1.size > 0:
+                            partitioned_system = arr1
+                        elif arr2.size > 0:
+                            partitioned_system = arr2
+
+                        if len(partitioned_system) > 0:
+                            # Convertir partitioned_system a array de NumPy si no lo es
+                            partitioned_system = np.array(partitioned_system)
+
+                            # Calcular la Distancia de Wasserstein (EMD)
+                            emd_distance = wasserstein_distance(
+                                original_system.flatten(), partitioned_system.flatten()
+                            )
+                            print(f"Earth Mover's Distance: {emd_distance}")
+
+                            if emd_distance < min_emd:
+                                min_emd = emd_distance
+                                best_partition = partitioned_system
+                                best_combination = combinacion_actual
+
+                        impresos.add(combinacion_actual)
+                        impresos.add(combinacion_inversa)
+
+    return best_combination, min_emd
+
+
+def obtener_sistema_original(ns, cs, cs_value, probabilities, states):
+    for probabilitie in probabilities:
+        print(probabilitie)
+    print("**********************************************************")
+    print("Sistema original")
+    print(f"{ns}ᵗ⁺¹ | {cs}ᵗ")
+    original_system = obtener_tabla_probabilidades(
+        repr_current_to_array(cs, cs_value),
+        repr_next_to_array(ns),
+        probabilities,
+        states,
+    )
+    print("Sistema original marginalizado")
+    print(original_system)
