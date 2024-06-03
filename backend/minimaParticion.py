@@ -26,13 +26,9 @@ def min_particion(ns, cs, cs_value, probabilities, states):
 
     print("|===========================================================|")
     print("| Original System: ", original_system, "    |")
-    print("|===========================================================|\n\n")
-    original_system = obtener_tabla_probabilidades(
-        repr_current_to_array(cs, cs_value),
-        repr_next_to_array(ns),
-        probabilities,
-        states,
-    )
+    print("|===========================================================|\n")
+
+    
     memory = {}
     combinaciones_evaluadas = set()
     min_emd = float("inf")
@@ -145,7 +141,7 @@ def min_particion(ns, cs, cs_value, probabilities, states):
                         combinaciones_evaluadas.add(combinacion_actual)
                         combinaciones_evaluadas.add(combinacion_inversa)
 
-    print(combinaciones_evaluadas)
+    #print(combinaciones_evaluadas)
     return mejor_particion, round(min_emd, 5)
 
 
@@ -179,7 +175,6 @@ def decomposition(ns, cs, cs_value, probabilities, states):
     print("|===========================================================|\n\n")
 
     # graphProbability(original_system, "orange", f"{ns}ᵗ⁺¹ | {cs}ᵗ = {cs_value}")
-
     memory = {}
     impresos = set()
     min_emd = float("inf")
@@ -277,7 +272,9 @@ def decomposition(ns, cs, cs_value, probabilities, states):
                         impresos.add(combinacion_inversa)
 
     print("|===========================================================|")
-    print(memory)
+    #print(memory)
     print("|===========================================================|\n\n")
+
+    print("Alejo")
 
     return mejor_particion, round(min_emd, 5)

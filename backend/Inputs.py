@@ -8,11 +8,6 @@ from backend.minimaParticion import decomposition, min_particion
 from backend.constantes import probabilities, states
 
 
-estado_futuro = "ABC"
-estado_presente = "AC"
-estado_actual = [1, 0]
-
-
 def format_partition_output(partition_result):
     # Extraer las particiones de 'ns' y 'cs' junto con la distancia de EMD
     particiones_ns, particiones_cs = partition_result[0]
