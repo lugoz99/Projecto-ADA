@@ -1,13 +1,9 @@
 import networkx as nx
 
 
-# The class `GrafoBipartito` represents a bipartite graph and provides methods to check if it is
-# bipartite, connected, get its components, add vertices and edges, and remove edges.
 class GrafoBipartito:
     def __init__(self):
-        """
-        The code defines a class with methods to add vertices and edges to a graph data structure.
-        """
+
         self.vertices = {}
         self.aristas_eliminadas = set()  # Almacena las aristas eliminadas
         self.grafo_nx = nx.Graph()
@@ -33,41 +29,11 @@ class GrafoBipartito:
             self.marcar_como_eliminada(u, v)
 
     def es_bipartito(self):
-        """
-        The function `es_bipartito` uses breadth-first search to determine if a graph is bipartite by
-        assigning colors to vertices and checking for conflicts.
-        :return: The function `es_bipartito` is returning a boolean value. It returns `True` if the
-        graph represented by the vertices in the class instance is bipartite, and `False` otherwise.
-        """
         queue = []
         visited = {v: False for v in self.vertices}
         color = {v: -1 for v in self.vertices}
 
         def bfs():
-            """
-            The function implements a breadth-first search algorithm to check if a graph is bipartite.
-            :return: The function `bfs()` returns a boolean value. It returns `True` if the graph
-            represented by the vertices and colors is bipartite (can be colored with only two colors
-            such that no two adjacent vertices have the same color), and `False` otherwise.
-            """
-            """
-            The function implements a breadth-first search algorithm to check if a graph is bipartite.
-            :return: The `bfs()` function returns a boolean value. It returns `True` if the graph
-            represented by the vertices and colors is bipartite (can be colored using only two colors
-            such that no two adjacent vertices have the same color), and `False` otherwise.
-            """
-            """
-            The function implements a breadth-first search algorithm to check if a graph is bipartite.
-            :return: The `bfs()` function is returning a boolean value. It returns `True` if the graph
-            represented by the vertices and colors is bipartite (can be colored using only two colors
-            such that no two adjacent vertices have the same color), and `False` otherwise.
-            """
-            """
-            The function implements a breadth-first search algorithm to check if a graph is bipartite.
-            :return: The `bfs()` function returns a boolean value. It returns `True` if the graph
-            represented by the vertices and colors is bipartite (can be colored using only two colors
-            such that no two adjacent vertices have the same color), and `False` otherwise.
-            """
             while queue:
                 u = queue.pop(0)
                 visited[u] = True

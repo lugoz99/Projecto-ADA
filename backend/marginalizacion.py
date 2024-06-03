@@ -7,21 +7,6 @@ import numpy as np
 
 
 def getIndicesMarginalizar(states, state):
-    """
-    The function `getIndicesMarginalizar` takes a list of states and a specific state, and returns a
-    dictionary of indices based on the available values in the state along with a computed value.
-
-    :param states: A list of lists representing different states. Each inner list contains values for
-    different variables in the state
-    :param state: The `state` parameter in the `getIndicesMarginalizar` function is a list representing
-    the state of a system. Each element in the list corresponds to a variable in the system. If the
-    value of a variable is known, it is represented by that value (e.g., 0 or
-    :return: The function `getIndicesMarginalizar` returns a tuple containing two values:
-    1. `indices`: a dictionary where keys are tuples of values from the specified indices in the states
-    list, and values are lists of indices corresponding to those keys.
-    2. `csValue`: an integer value obtained by converting the binary representation of the non-None
-    elements in the state list to an integer.
-    """
     availableIndices = []
     indices = {}
     csValue = ""
@@ -53,11 +38,8 @@ def margenaliceNextState(nsIndices, probabilites):
         for i in range(len(nsTransitionTable)):
             probability = 0
             for j in range(len(indices)):
-
                 probability += probabilites[i][indices[j]]
-
             nsTransitionTable[i][currentColumn] = probability
-
         currentColumn += 1
     return nsTransitionTable
 
