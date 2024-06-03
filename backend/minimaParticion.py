@@ -36,7 +36,7 @@ def decomposition(ns, cs, cs_value, probabilities, states):
     )
 
     print("|===========================================================|")
-    print("| Original System: ",original_system,"    |")
+    print("| Estado Original: ",original_system,"    |")
     print("|===========================================================|\n\n")
 
     #graphProbability(original_system, "orange", f"{ns}ᵗ⁺¹ | {cs}ᵗ = {cs_value}")
@@ -99,7 +99,7 @@ def decomposition(ns, cs, cs_value, probabilities, states):
                         and combinacion_inversa not in impresos
                     ) or (ns1 == ns and ns2 == "" and cs1 == "" and cs2 == ""):
                         print("|===========================================================|")
-                        #print(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
+                        print(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
                         print("|===========================================================|\n\n")
                         arr1 = np.array(descomponer(ns2, cs2, memory, states))
                         arr2 = np.array(descomponer(ns1, cs1, memory, states))
