@@ -36,7 +36,7 @@ def decomposition(ns, cs, cs_value, probabilities, states):
     )
 
     print("|===========================================================|")
-    print("| Original System: ", original_system, "    |")
+    print("| Estado Original: ", original_system, "    |")
     print("|===========================================================|\n\n")
 
     # graphProbability(original_system, "orange", f"{ns}ᵗ⁺¹ | {cs}ᵗ = {cs_value}")
@@ -101,7 +101,9 @@ def decomposition(ns, cs, cs_value, probabilities, states):
                         print(
                             "|===========================================================|"
                         )
-                        # print(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
+                        print(
+                            f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})"
+                        )
                         print(
                             "|===========================================================|\n\n"
                         )
