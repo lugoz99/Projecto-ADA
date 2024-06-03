@@ -8,13 +8,13 @@ from networkx import is_bipartite
 from scipy.stats import wasserstein_distance
 import numpy as np
 import networkx as nx
-from auxiliares import (
+from backend.auxiliares import (
     build_probabilities,
     repr_next_to_array,
     repr_current_to_array,
     ordenar_matriz_product,
 )
-from marginalizacion import (
+from backend.marginalizacion import (
     obtener_tabla_probabilidades,
 )
 
