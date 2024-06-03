@@ -4,13 +4,8 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-from backend.minimaParticion import decomposition, min_particion
+from backend.minimaParticion import min_particion
 from backend.constantes import probabilities, states
-
-
-estado_futuro = "ABC"
-estado_presente = "AC"
-estado_actual = [1, 0]
 
 
 def format_partition_output(partition_result):
@@ -65,7 +60,6 @@ cs_value = [1, 0, 0, 0, 1]
 print(
     min_particion(estado_futuro_1, estado_presente_1, cs_value, probabilities, states)
 )
-
 
 casos_de_prueba = [
     ("ABCD", "ABCD"),
