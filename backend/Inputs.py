@@ -1,10 +1,14 @@
+import time
+
+start_time = time.time()
+
 import sys
 import os
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-from backend.minimaParticion import min_particion
+from backend.minimaParticion import decomposition
 from backend.constantes import probabilities, states
 
 
@@ -58,7 +62,11 @@ estado_presente_11 = "AC"
 cs_value = [1, 0, 0, 0, 1]
 
 print(
-    min_particion(estado_futuro_1, estado_presente_1, cs_value, probabilities, states)
+    format_partition_output(
+        decomposition(
+            estado_futuro_1, estado_presente_1, cs_value, probabilities, states
+        )
+    )
 )
 
 casos_de_prueba = [
@@ -74,3 +82,8 @@ casos_de_prueba = [
     ("BC", "C"),
     ("ABC", "AC"),
 ]
+
+
+print("\n\n|===========================================================|")
+print("|--- %s Segundos ---" % (time.time() - start_time), "|")
+print("|===========================================================|")
