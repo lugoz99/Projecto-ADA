@@ -5,9 +5,15 @@ start_time = time.time()
 import sys
 import os
 
+import streamlit as st
+import pandas as pd
+from io import StringIO
+
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
+from backend.generator.probabilities import generatorProbabilities
 from backend.minimaParticion import decomposition
 from backend.constantes import probabilities, states
 
@@ -36,54 +42,37 @@ def format_partition_output(partition_result):
 
 estado_futuro_1 = "ABCD"
 estado_presente_1 = "ABCD"
-estado_futuro_2 = "ABCD"
-estado_presente_2 = "ABCDE"
-estado_futuro_3 = "ABCDE"
-estado_presente_3 = "ABCD"
-estado_futuro_4 = "ABC"
-estado_presente_4 = "ABCDE"
-estado_futuro_5 = "ABCDE"
-estado_presente_5 = "AB"
-estado_futuro_6 = "ACD"
-estado_presente_6 = "ACD"
-estado_futuro_7 = "ABC"
-estado_presente_7 = "ABC"
-estado_futuro_8 = "ABCE"
-estado_presente_8 = "ABE"
-estado_futuro_9 = "BC"
-estado_presente_9 = "ABC"
-estado_futuro_10 = "BC"
-estado_presente_10 = "C"
-estado_futuro_11 = "ABC"
-estado_presente_11 = "AC"
-
 
 # Valor del estado actual del sistema
 cs_value = [1, 0, 0, 0, 1]
 
-print(
-    format_partition_output(
-        decomposition(
-            estado_futuro_1, estado_presente_1, cs_value, probabilities, states
-        )
-    )
-)
+st.title('Próyecto Final')
+st.subheader('Análisis Y Diseño De Algoritmo')
 
 
-casos_de_prueba = [
-    ("ABCD", "ABCD"),
-    ("ABCD", "ABCDE"),
-    ("ABCDE", "ABCD"),
-    ("ABC", "ABCDE"),
-    ("ABCDE", "AB"),
-    ("ACD", "ACD"),
-    ("ABC", "ABC"),
-    ("ABCE", "ABE"),
-    ("BC", "ABC"),
-    ("BC", "C"),
-    ("ABC", "AC"),
-]
+st.divider()
 
+data = st.file_uploader("Elige un Archivo")
+
+if data is not None:
+
+    st.write(pd.read_json(data))
+
+    # To convert to a string based IO:
+    dataJson = StringIO(data.getvalue().decode("utf-8"))
+
+    searchStatus, result_matrix = generatorProbabilities(dataJson.read())
+
+    #st.table(searchStatus)
+    st.table(result_matrix)
+
+#print(
+#    format_partition_output(
+#        decomposition(
+#            estado_futuro_1, estado_presente_1, cs_value, probabilities, states
+#        )
+#    )
+#)
 
 print("\n\n|===========================================================|")
 print("|--- %s Segundos ---" % (time.time() - start_time),"|")
