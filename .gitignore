@@ -1,2 +1,3 @@
 /backend/__pycache__/*.cpython-312.pyc
 *.cpython-312.pyc
+/backend/__pycache__/*
