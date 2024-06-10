@@ -10,23 +10,11 @@ from backend.auxiliares import (
 from backend.marginalizacion import obtener_tabla_probabilidades
 
 
-def decomposition(ns, cs, cs_value, probabilities, states):
+def decomposition(ns, cs, cs_value, probabilities, states, st):
     memory = {}
-    print("\n");
-    print("|===========================================================|")
-    print("|                        Probabilities                      |")
-    print("|===========================================================|")
-    for probabilitie in probabilities:
-        print(probabilitie)
-    print("|===========================================================|")
-    print("\n");
 
-    print("|===========================================================|")
-    print("|                      Sistema original                     |")
-    print("|===========================================================|")
-    print("                     "f"{ns}ᵗ⁺¹ | {cs}ᵗ                    ")
-    print("|===========================================================|")
-    print("\n");
+    st.write("Sistema Original")
+    st.write(""f"{ns}ᵗ⁺¹ | {cs}ᵗ")
 
     original_system = obtener_tabla_probabilidades(
         repr_current_to_array(cs, cs_value),
@@ -35,9 +23,8 @@ def decomposition(ns, cs, cs_value, probabilities, states):
         states,
     )
 
-    print("|===========================================================|")
-    print("| Estado Original: ",original_system,"    |")
-    print("|===========================================================|\n\n")
+    st.write("Validación Estado Original")
+    st.text(original_system)
 
     #graphProbability(original_system, "orange", f"{ns}ᵗ⁺¹ | {cs}ᵗ = {cs_value}")
 
@@ -80,63 +67,71 @@ def decomposition(ns, cs, cs_value, probabilities, states):
 
         return value
 
-    for lenNs in range(len(ns) + 1):
-        for i in range(len(ns) - lenNs + 1):
-            j = i + lenNs - 1
-            ns1, ns2 = ns[i : j + 1], ns[:i] + ns[j + 1 :]
+    col1, col2 = st.columns(2)
 
-            for lenCs in range(len(cs) + 1):
-                for x in range(len(cs) - lenCs + 1):
-                    z = x + lenCs - 1
-                    cs1, cs2 = cs[x : z + 1], cs[:x] + cs[z + 1 :]
+    with col1:
 
-                    # Verificar duplicados
-                    combinacion_actual = ((ns1, cs1), (ns2, cs2))
-                    combinacion_inversa = ((ns2, cs2), (ns1, cs1))
+        st.subheader("Estados Encontrados")
 
-                    if (
-                        combinacion_actual not in impresos
-                        and combinacion_inversa not in impresos
-                    ) or (ns1 == ns and ns2 == "" and cs1 == "" and cs2 == ""):
-                        print("|===========================================================|")
-                        print(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
-                        print("|===========================================================|\n\n")
-                        arr1 = np.array(descomponer(ns2, cs2, memory, states))
-                        arr2 = np.array(descomponer(ns1, cs1, memory, states))
+        for lenNs in range(len(ns) + 1):
+            for i in range(len(ns) - lenNs + 1):
+                j = i + lenNs - 1
+                ns1, ns2 = ns[i : j + 1], ns[:i] + ns[j + 1 :]
 
-                        partitioned_system = []
+                for lenCs in range(len(cs) + 1):
+                    for x in range(len(cs) - lenCs + 1):
+                        z = x + lenCs - 1
+                        cs1, cs2 = cs[x : z + 1], cs[:x] + cs[z + 1 :]
 
-                        if len(arr1) > 0 and len(arr2) > 0:
-                            cross_product = np.kron(arr1, arr2)
-                            partitioned_system = ordenar_matriz_product(cross_product)
+                        # Verificar duplicados
+                        combinacion_actual = ((ns1, cs1), (ns2, cs2))
+                        combinacion_inversa = ((ns2, cs2), (ns1, cs1))
 
-                        elif len(arr1) > 0:
-                            partitioned_system = arr1
-                        elif len(arr2) > 0:
-                            partitioned_system = arr2
-
-                        if len(partitioned_system) > 0:
-                            # Convertir partitioned_system a array de NumPy si no lo es
-                            partitioned_system = np.array(partitioned_system)
-
-                            # Calcular la Distancia de Wasserstein (EMD)
-                            emd_distance = wasserstein_distance(
-                                original_system,
-                                partitioned_system,
-                            )
+                        if (
+                            combinacion_actual not in impresos
+                            and combinacion_inversa not in impresos
+                        ) or (ns1 == ns and ns2 == "" and cs1 == "" and cs2 == ""):
                             
-                            #print(emd_distance)
-                            if emd_distance < min_emd:
-                                min_emd = emd_distance
-                                mejor_particion = combinacion_actual
+                            st.write(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
+                            
+                            arr1 = np.array(descomponer(ns2, cs2, memory, states))
+                            arr2 = np.array(descomponer(ns1, cs1, memory, states))
 
-                        impresos.add(combinacion_actual)
-                        impresos.add(combinacion_inversa)
+                            partitioned_system = []
 
+                            if len(arr1) > 0 and len(arr2) > 0:
+                                cross_product = np.kron(arr1, arr2)
+                                partitioned_system = ordenar_matriz_product(cross_product)
 
-    print("|===========================================================|")
-    print(memory)
-    print("|===========================================================|\n\n")
+                            elif len(arr1) > 0:
+                                partitioned_system = arr1
+                            elif len(arr2) > 0:
+                                partitioned_system = arr2
+
+                            if len(partitioned_system) > 0:
+                                # Convertir partitioned_system a array de NumPy si no lo es
+                                partitioned_system = np.array(partitioned_system)
+
+                                # Calcular la Distancia de Wasserstein (EMD)
+                                emd_distance = wasserstein_distance(
+                                    original_system,
+                                    partitioned_system,
+                                )
+                                
+                                #print(emd_distance)
+                                if emd_distance < min_emd:
+                                    min_emd = emd_distance
+                                    mejor_particion = combinacion_actual
+
+                            impresos.add(combinacion_actual)
+                            impresos.add(combinacion_inversa)
+
+    with col2:
+        
+        st.subheader("Memoría")
+
+        st.json(memory)
+
 
     return mejor_particion, round(min_emd, 5)
     

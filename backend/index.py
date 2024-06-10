@@ -1,9 +1,8 @@
 import time
 
-start_time = time.time()
-
-import sys
 import os
+import sys
+import json
 
 import streamlit as st
 import pandas as pd
@@ -15,7 +14,6 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from backend.generator.probabilities import generatorProbabilities
 from backend.minimaParticion import decomposition
-from backend.constantes import probabilities, states
 
 
 def format_partition_output(partition_result):
@@ -37,18 +35,16 @@ def format_partition_output(partition_result):
         "Particione de cs": particiones_cs_formateadas,
         "Distancia de EMD": distancia_emd,
     }
+
+    print("\n\n|===========================================================|")
+    print("|--- %s Segundos ---" % (time.time() - start_time),"|")
+    print("|===========================================================|")
+
     return formatted_output
 
 
-estado_futuro_1 = "ABCD"
-estado_presente_1 = "ABCD"
-
-# Valor del estado actual del sistema
-cs_value = [1, 0, 0, 0, 1]
-
 st.title('Próyecto Final')
 st.subheader('Análisis Y Diseño De Algoritmo')
-
 
 st.divider()
 
@@ -56,24 +52,51 @@ data = st.file_uploader("Elige un Archivo")
 
 if data is not None:
 
+    st.header('Contenido del Documento')
     st.write(pd.read_json(data))
 
     # To convert to a string based IO:
-    dataJson = StringIO(data.getvalue().decode("utf-8"))
+    dataJson = json.loads(StringIO(data.getvalue().decode("utf-8")).read())
 
-    searchStatus, result_matrix = generatorProbabilities(dataJson.read())
+    searchStatus, result_matrix, states = generatorProbabilities(dataJson)
 
-    #st.table(searchStatus)
+    st.header('Tabla de Probabilidad')
     st.table(result_matrix)
 
-#print(
-#    format_partition_output(
-#        decomposition(
-#            estado_futuro_1, estado_presente_1, cs_value, probabilities, states
-#        )
-#    )
-#)
+    st.text('Estado Buscado')
+    st.text(dataJson["stateSought"])
 
-print("\n\n|===========================================================|")
-print("|--- %s Segundos ---" % (time.time() - start_time),"|")
-print("|===========================================================|")
+    st.text('Valor Encontrado')
+    st.text(searchStatus)
+
+    st.divider()
+    st.title("Procesar Datos")
+
+    st.caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dignissim nulla. Proin porta nulla eros, ac posuere nisi molestie et. Nulla dapibus pellentesque enim, at elementum nulla mollis ut. Nunc convallis ultricies augue faucibus sagittis. Mauris hendrerit lorem a nunc porta dignissim. Sed vehicula.")
+
+    
+    st.write("Complete todos los campos")
+        
+    currentStatus = st.text_input("Estado Presente", "ABC")
+    nextStatus = st.text_input("Estado Futuro", "ABC")
+        
+    # Every form must have a submit button.
+    submitted = st.button("Submit")
+
+    st.divider()
+    st.title("Resultado Procesamiento de Datos")
+
+    if submitted:
+
+        start_time = time.time()
+        st.text(
+            format_partition_output(
+                decomposition(
+                    nextStatus, currentStatus, dataJson["stateSought"], result_matrix, states, st
+                )
+            )
+        )
+
+        with st.spinner('Procesando Datos...'):
+            time.sleep(30)
+        st.success('Done!')

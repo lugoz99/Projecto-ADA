@@ -7,6 +7,7 @@ import numpy as np
 
 
 def getIndicesMarginalizar(states, state):
+    
     availableIndices = []
     indices = {}
     csValue = ""

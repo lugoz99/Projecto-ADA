@@ -1,19 +1,33 @@
 import json
 
+from generator.calculateProbabilities_v3 import productTensor_v3, getStatus_v3
+from generator.calculateProbabilities_v4 import productTensor_v4, getStatus_v4
+from generator.calculateProbabilities_v5 import productTensor_v5, getStatus_v5
+from generator.calculateProbabilities_v6 import productTensor_v6, getStatus_v6
+
+
 def generatorProbabilities(data):
 
-    def createTableGeneral(dataRaw):
-
-        data = json.loads(dataRaw)
+    def createTableGeneral(data):
 
         num_cols = len(data["primogenitalTables"]["A"][0])
+        status = []
 
         # Inicializar una matriz para almacenar los resultados de la multiplicación
         result_matrix = [[-1] * num_cols for _ in range(num_cols)]
 
         for col in range(num_cols):
             for row in range(num_cols):
-                result_matrix[col][row] = productTensor(row,col,data["primogenitalTables"]);
+
+                if(len(data["primogenitalTables"].keys()) == 3):
+                    result_matrix[col][row] = productTensor_v3(row,col,data["primogenitalTables"]);
+                if(len(data["primogenitalTables"].keys()) == 4):
+                    result_matrix[col][row] = productTensor_v4(row,col,data["primogenitalTables"]);
+                if(len(data["primogenitalTables"].keys()) == 5):
+                    result_matrix[col][row] = productTensor_v5(row,col,data["primogenitalTables"]);
+                if(len(data["primogenitalTables"].keys()) == 6):
+                    result_matrix[col][row] = productTensor_v6(row,col,data["primogenitalTables"]);
+                
 
         # Imprimir la matriz resultante
         # print("Matriz resultante:")
@@ -21,29 +35,18 @@ def generatorProbabilities(data):
             #print(row)
 
         #Buscar el estado especifico
-        status = searchStatus(data,result_matrix)
+        valueStatus = searchStatus(data,result_matrix)
 
-        return status, result_matrix
+        if(len(data["primogenitalTables"].keys()) == 3):
+            status = getStatus_v3()
+        if(len(data["primogenitalTables"].keys()) == 4):
+            status = getStatus_v4()
+        if(len(data["primogenitalTables"].keys()) == 5):
+            status = getStatus_v5()
+        if(len(data["primogenitalTables"].keys()) == 6):
+            status = getStatus_v6()
 
-
-    def productTensor(row,col,data):
-        
-        if(row == 0):
-            return data["A"][0][col] * data["B"][0][col] * data["C"][0][col]
-        if(row == 1):
-            return data["A"][1][col] * data["B"][0][col] * data["C"][0][col]
-        if(row == 2):
-            return data["A"][0][col] * data["B"][1][col] * data["C"][0][col]
-        if(row == 3):
-            return data["A"][1][col] * data["B"][1][col] * data["C"][0][col]
-        if(row == 4):
-            return data["A"][0][col] * data["B"][0][col] * data["C"][1][col]
-        if(row == 5):
-            return data["A"][1][col] * data["B"][0][col] * data["C"][1][col]
-        if(row == 6):
-            return data["A"][0][col] * data["B"][1][col] * data["C"][1][col]
-        if(row == 7):
-            return data["A"][1][col] * data["B"][1][col] * data["C"][1][col]
+        return valueStatus, result_matrix, status
         
     def searchStatus(data, result_matrix):
 
