@@ -12,8 +12,9 @@ from io import StringIO
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-from backend.generator.probabilities import generatorProbabilities
 from backend.minimaParticion import decomposition
+from backend.cut_algoritmo import cut_process
+from backend.generator.probabilities import generatorProbabilities
 
 
 def format_partition_output(partition_result):
@@ -70,7 +71,7 @@ if data is not None:
     st.text(searchStatus)
 
     st.divider()
-    st.title("Procesar Datos")
+    st.title("Procesar Datos con Descomposición")
 
     st.caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dignissim nulla. Proin porta nulla eros, ac posuere nisi molestie et. Nulla dapibus pellentesque enim, at elementum nulla mollis ut. Nunc convallis ultricies augue faucibus sagittis. Mauris hendrerit lorem a nunc porta dignissim. Sed vehicula.")
 
@@ -81,12 +82,12 @@ if data is not None:
     nextStatus = st.text_input("Estado Futuro", "ABC")
         
     # Every form must have a submit button.
-    submitted = st.button("Submit")
-
-    st.divider()
-    st.title("Resultado Procesamiento de Datos")
+    submitted = st.button("Procesar - Algoritmo Descomposición")
 
     if submitted:
+
+        st.divider()
+        st.subheader("Resultado Procesamiento de Datos")
 
         start_time = time.time()
         st.json(
@@ -100,3 +101,23 @@ if data is not None:
         with st.spinner('Procesando Datos...'):
             time.sleep(30)
         st.success('Done!')
+
+    
+    st.divider()
+    st.title("Procesar Datos con Algoritmo de Corte")
+    st.caption("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dignissim nulla. Proin porta nulla eros, ac posuere nisi molestie et. Nulla dapibus pellentesque enim, at elementum nulla mollis ut. Nunc convallis ultricies augue faucibus sagittis. Mauris hendrerit lorem a nunc porta dignissim. Sed vehicula.")
+
+    st.write("Complete todos los campos")
+        
+    currentStatusDesc = st.text_input("Estado Presente Cut", "ABC")
+    nextStatusDesc = st.text_input("Estado Futuro Cut", "ABC")
+        
+    # Every form must have a submit button.
+    submittedDesc = st.button("Procesar - Algoritmo Corte")
+
+    if submittedDesc:
+
+        st.divider()
+        st.subheader("Resultado Procesamiento de Datos")
+
+        cut_process(nextStatus, currentStatusDesc, dataJson["stateSought"], result_matrix, states, st)
