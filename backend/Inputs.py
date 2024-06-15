@@ -9,7 +9,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from backend.auxiliares import repr_current_to_array, repr_next_to_array
-from backend.marginalizacion import obtener_tabla_probabilidades
+from backend.marginalizacion import obtener_tabla_probabilidades, verificar_vacio
 
 from backend.minimaParticion import decomposition
 from backend.constantes import (
@@ -57,7 +57,8 @@ cs_value = [1, 0, 0, 0, 1]
 #     probabilities,
 #     states,
 # )
-print(decomposition("BC", "C", [0], probabilidades, estados))
+print(verificar_vacio("", "BC"))
+print(decomposition("C", "", [0], probabilidades, estados))
 # print(decomposition("C", "", [1], probabilidades, estados))
 
 # print(

@@ -66,6 +66,7 @@ def margenaliceCurrentState(csIndices, nsTransitionTable):
     return csTransitionTable
 
 
+# TODO: Manejar el caso de vacion en el estado actual y futuro
 def obtener_tabla_probabilidades(currentState, nextState, probabilities, states):
     result = []
     csTransitionTable = []
@@ -87,10 +88,8 @@ def obtener_tabla_probabilidades(currentState, nextState, probabilities, states)
                 else:
                     result = csValue
     else:
-        print("Condicional2")
         nsIndices, _ = getIndicesMarginalizar(states, nextState)
         nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
         csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
         result = csTransitionTable[csValueIndex]
-
     return result
