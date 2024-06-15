@@ -89,7 +89,7 @@ if data is not None:
     if submitted:
 
         start_time = time.time()
-        st.text(
+        st.json(
             format_partition_output(
                 decomposition(
                     nextStatus, currentStatus, dataJson["stateSought"], result_matrix, states, st

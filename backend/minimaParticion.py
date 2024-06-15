@@ -7,6 +7,9 @@ from backend.auxiliares import (
     repr_current_to_array,
     repr_next_to_array,
 )
+
+from chartPlotter.ProbabilityTransitionController import graphProbability
+
 from backend.marginalizacion import obtener_tabla_probabilidades
 
 
@@ -26,7 +29,7 @@ def decomposition(ns, cs, cs_value, probabilities, states, st):
     st.write("Validación Estado Original")
     st.text(original_system)
 
-    #graphProbability(original_system, "orange", f"{ns}ᵗ⁺¹ | {cs}ᵗ = {cs_value}")
+    graphProbability(original_system,st)
 
     memory = {}
     impresos = set()
@@ -38,9 +41,6 @@ def decomposition(ns, cs, cs_value, probabilities, states, st):
     def descomponer(ns, cs, memory, states):
         if memory.get(cs) is not None and memory.get(cs).get(ns) is not None:
             if any(memory.get(cs).get(ns)):
-                #print("|===========================================================|")
-                #print("|                      get in memory                        |")
-                #print("|===========================================================|\n\n")
                 return memory.get(cs).get(ns)
 
         if len(ns) == 1:
@@ -92,7 +92,9 @@ def decomposition(ns, cs, cs_value, probabilities, states, st):
                             and combinacion_inversa not in impresos
                         ) or (ns1 == ns and ns2 == "" and cs1 == "" and cs2 == ""):
                             
-                            st.write(f"                   ({ns2} | {cs2})", f" * ({ns1} | {cs1})")
+                            st.latex(rf"""
+                                     \bullet \left(\frac{{{ns2}}}{{{cs2}}}\right) * \left(\frac{{{ns1}}}{{{cs1}}}\right)
+                                     """)
                             
                             arr1 = np.array(descomponer(ns2, cs2, memory, states))
                             arr2 = np.array(descomponer(ns1, cs1, memory, states))
