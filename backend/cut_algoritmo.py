@@ -34,7 +34,7 @@ def is_bipartite(G, start_node, end_node):
 def cut_process(ns, cs, cs_value, probabilities, states ,st):
     G = nx.DiGraph()
     add_connections(G, ns, cs)
-    st.write("Grafo principal")
+    st.subheader("Grafo principal")
     draw_graph(G,st)
 
     nodes = list(G.nodes())
@@ -53,8 +53,6 @@ def cut_process(ns, cs, cs_value, probabilities, states ,st):
 
     start_process(G, ns, cs, cs_value, min_partition, probabilities, states,st)
 
-    '''
-
     edge_to_remove_1 = min_partition["edge_to_remove_1"]
     edge_to_remove_2 = min_partition["edge_to_remove_2"]
 
@@ -62,16 +60,21 @@ def cut_process(ns, cs, cs_value, probabilities, states ,st):
         G.remove_edge(edge_to_remove_1, edge_to_remove_2)
         G.remove_edge(edge_to_remove_2, edge_to_remove_1)
 
-    st.write("Grafo final")
-    draw_graph(G)
+    st.divider()
+    st.subheader("Grafo final")
+    draw_graph(G,st)
 
     if min_partition["partition"]:
-        st.caption("Minima partición")
-        st.caption("emd", min_partition["emd"])
-        st.caption("partition", min_partition["partition"])
-        graphProbability(min_partition["partitioned_system"],st)
+        
+        st.subheader("Minima partición")
+        
+        st.write("emd")
+        st.write(min_partition["emd"])
 
-    '''
+        st.write("partition")
+        st.write(min_partition["partition"])
+        st.latex(min_partition["partition"])
+        graphProbability(min_partition["partitioned_system"], st)
 
 
 def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st):
@@ -90,19 +93,25 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st)
 
             csC = cs[j] + "ᵗ"
 
-            print("Variable actual", nsN)
-            print("cortando", csC, "de", nsN)
+            st.divider()
+            st.subheader("Variable actual")
+            st.latex(nsN)
+            st.subheader("Cortando")
+            st.latex(csC)
 
             cs_left_cut = cs[:j]
             cs_right_cut = cs[j + 1 :]
             cs_right_partition = cs_left_cut + cs_right_cut
 
-            partition = f"(∅ᵗ⁺¹ | {csC}ᵗ) y ({ns}ᵗ⁺¹ | {cs_right_partition}ᵗ)"
-            print("partition: ", partition)
+            partition = f"(∅ᵗ⁺¹ | {csC}) y ({ns}ᵗ⁺¹ | {cs_right_partition}ᵗ)"
+            st.subheader("Partition:")
+            st.latex(rf"""
+                     \bullet \left(\frac{{0^{{t+1}}}}{{{csC}}}\right) * \left(\frac{{{ns}^{{t+1}}}}{{{cs_right_partition}^{{t}}}}\right)
+                     """)
 
             G.remove_edge(csC, nsN)
             G.remove_edge(nsN, csC)
-            draw_graph(G)
+            draw_graph(G,st)
 
             arr1 = np.array(cut("", csC, cs_value, memory, probabilities, states))
             arr2 = np.array(
@@ -121,12 +130,14 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st)
 
             # Calcular la Distancia de Wasserstein (EMD)
             emd_distance = wasserstein_distance(original_system, partitioned_system)
-            print(f"Earth Mover's Distance: {emd_distance}")
+            st.subheader("Earth Mover's Distance:")
+            st.write(emd_distance)
 
             start_node = csC
             end_node = nsN
+
             if is_bipartite(G, start_node, end_node):
-                print("Bipartición generada")
+                st.info("Bipartición generada")
                 if min_partition.get("partition") == "":
                     set_min_partition(
                         min_partition,
@@ -146,7 +157,7 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st)
                         csC,
                         nsN,
                     )
-                    print("minima partición alcanzada")
+                    st.info("Minima partición alcanzada")
                     return
 
                 elif emd_distance <= min_partition.get("emd"):
@@ -158,21 +169,19 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st)
                         csC,
                         nsN,
                     )
-                    print("minima partición actualizada")
+                    st.info("Minima partición actualizada")
 
                 G.add_edge(csC, nsN)
                 G.add_edge(nsN, csC)
-                print("bipartición restarurada con costo:", emd_distance)
+                st.warning("Bipartición restarurada con costo:")
             else:
-                print("No bipartición generada")
+                st.info("No bipartición generada")
                 if emd_distance > 0:
                     G.add_edge(csC, nsN)
                     G.add_edge(nsN, csC)
-                    print("conexión restarurada con costo: ", emd_distance)
+                    st.info("Conexión restarurada con costo: ")
                 else:
-                    print("conexión elimina sin perdida de información")
-
-            print("----------   ********** ------------")
+                    st.success("Conexión eliminada sin perdida de información")
 
 
 def set_min_partition(
