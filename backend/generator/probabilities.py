@@ -5,7 +5,6 @@ from generator.calculateProbabilities_v4 import productTensor_v4, getStatus_v4
 from generator.calculateProbabilities_v5 import productTensor_v5, getStatus_v5
 from generator.calculateProbabilities_v6 import productTensor_v6, getStatus_v6
 
-
 def generatorProbabilities(data):
 
     def createTableGeneral(data):
