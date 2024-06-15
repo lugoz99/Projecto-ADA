@@ -8,30 +8,19 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
+from backend.auxiliares import repr_current_to_array, repr_next_to_array
+from backend.marginalizacion import obtener_tabla_probabilidades
+
 from backend.minimaParticion import decomposition
-from backend.constantes import probabilities, states
-
-
-def format_partition_output(partition_result):
-    # Extraer las particiones de 'ns' y 'cs' junto con la distancia de EMD
-    particiones_ns, particiones_cs = partition_result[0]
-    distancia_emd = partition_result[1]
-
-    # Formatear las particiones de 'ns' y 'cs' para imprimir
-    particiones_ns_formateadas = " | ".join(
-        ["".join(subparticion) for subparticion in particiones_ns]
-    )
-    particiones_cs_formateadas = " | ".join(
-        ["".join(subparticion) for subparticion in particiones_cs]
-    )
-
-    # Construir y devolver el resultado formateado
-    formatted_output = {
-        "Particione de ns": particiones_ns_formateadas,
-        "Particione de cs": particiones_cs_formateadas,
-        "Distancia de EMD": distancia_emd,
-    }
-    return formatted_output
+from backend.constantes import (
+    probabilities,
+    states,
+    probabilidades,
+    estados,
+    estado_presente_v3,
+    estado_futuro_v3,
+    estado_actual_v3,
+)
 
 
 estado_futuro_1 = "ABCD"
@@ -61,13 +50,22 @@ estado_presente_11 = "AC"
 # Valor del estado actual del sistema
 cs_value = [1, 0, 0, 0, 1]
 
-print(
-    format_partition_output(
-        decomposition(
-            estado_futuro_1, estado_presente_1, cs_value, probabilities, states
-        )
-    )
+
+original_system = obtener_tabla_probabilidades(
+    repr_current_to_array("A", [1]),
+    repr_next_to_array(" "),
+    probabilities,
+    states,
 )
+
+print(decomposition("", "A", [1], probabilidades, estados))
+print(decomposition("C", "", [1], probabilidades, estados))
+
+# print(
+#     decomposition(
+#         estado_futuro_v3, estado_presente_v3, estado_actual_v3, probabilidades, estados
+#     )
+# )
 
 casos_de_prueba = [
     ("ABCD", "ABCD"),

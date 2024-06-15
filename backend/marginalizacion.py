@@ -3,10 +3,12 @@
 # - Aplicar marginalización en el futuro y en el tiempo actual para obtener el cálculo
 # de la Distribución Original.
 
+from operator import le
 import numpy as np
 
 
 def getIndicesMarginalizar(states, state):
+
     availableIndices = []
     indices = {}
     csValue = ""
@@ -32,7 +34,7 @@ def margenaliceNextState(nsIndices, probabilites):
     Markov chain based on given indices and probabilities.
 
     """
-    nsTransitionTable = [[None] * len(nsIndices) for i in range(len(probabilites))]
+    nsTransitionTable = np.full((len(probabilites), len(nsIndices)), None)
     currentColumn = 0
     for indices in nsIndices.values():
         for i in range(len(nsTransitionTable)):
@@ -40,6 +42,7 @@ def margenaliceNextState(nsIndices, probabilites):
             for j in range(len(indices)):
                 probability += probabilites[i][indices[j]]
             nsTransitionTable[i][currentColumn] = probability
+
         currentColumn += 1
     return nsTransitionTable
 
@@ -73,14 +76,12 @@ def obtener_tabla_probabilidades(currentState, nextState, probabilities, states)
             if state is not None:
                 newNs = [None] * len(nextState)
                 newNs[i] = nextState[i]
-
                 nsIndices, _ = getIndicesMarginalizar(states, newNs)
                 nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
                 csTransitionTable = margenaliceCurrentState(
                     csIndices, nsTransitionTable
                 )
                 csValue = csTransitionTable[csValueIndex]
-
                 if len(result) > 0:
                     result = np.kron(result, csValue)
                 else:
@@ -88,7 +89,6 @@ def obtener_tabla_probabilidades(currentState, nextState, probabilities, states)
     else:
         nsIndices, _ = getIndicesMarginalizar(states, nextState)
         nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
-
         csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
         result = csTransitionTable[csValueIndex]
 

@@ -18,11 +18,22 @@ def repr_next_to_array(letras):
     return ns_arr
 
 
+# def repr_current_to_array(cs, cs_value):
+#     # Crear un diccionario que mapee las letras en cs a sus correspondientes valores en cs_value
+#     cs_dict = {cs[i]: cs_value[i] for i in range(len(cs))}
+#     # Crear un nuevo arreglo con None en las posiciones que no están especificadas por cs
+#     cs_arr = [cs_dict.get(c) for c in cs]
+#     return cs_arr
+
+
 def repr_current_to_array(cs, cs_value):
     # Crear un diccionario que mapee las letras en cs a sus correspondientes valores en cs_value
-    cs_dict = {cs[i]: cs_value[i] for i in range(len(cs))}
+    cs_dict = {
+        cs[i]: cs_value[i] if i < len(cs_value) else None for i in range(len(cs))
+    }
     # Crear un nuevo arreglo con None en las posiciones que no están especificadas por cs
-    cs_arr = [cs_dict.get(c) for c in cs]
+    # TODO : Generalizar esto afecta
+    cs_arr = [cs_dict.get(c) for c in "ABCDE"]
     return cs_arr
 
 

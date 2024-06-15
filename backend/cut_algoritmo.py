@@ -138,7 +138,7 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states):
                     print("minima partición alcanzada")
                     return
 
-                elif emd_distance <= min_partition.get("emd"):
+                elif emd_distance < min_partition.get("emd"):
                     set_min_partition(
                         min_partition,
                         partition,
