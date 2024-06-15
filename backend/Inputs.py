@@ -51,15 +51,14 @@ estado_presente_11 = "AC"
 cs_value = [1, 0, 0, 0, 1]
 
 
-original_system = obtener_tabla_probabilidades(
-    repr_current_to_array("A", [1]),
-    repr_next_to_array(" "),
-    probabilities,
-    states,
-)
-
-print(decomposition("", "A", [1], probabilidades, estados))
-print(decomposition("C", "", [1], probabilidades, estados))
+# original_system = obtener_tabla_probabilidades(
+#     repr_current_to_array("C", [0]),
+#     repr_next_to_array("BC"),
+#     probabilities,
+#     states,
+# )
+print(decomposition("BC", "C", [0], probabilidades, estados))
+# print(decomposition("C", "", [1], probabilidades, estados))
 
 # print(
 #     decomposition(

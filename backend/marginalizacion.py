@@ -87,6 +87,7 @@ def obtener_tabla_probabilidades(currentState, nextState, probabilities, states)
                 else:
                     result = csValue
     else:
+        print("Condicional2")
         nsIndices, _ = getIndicesMarginalizar(states, nextState)
         nsTransitionTable = margenaliceNextState(nsIndices, probabilities)
         csTransitionTable = margenaliceCurrentState(csIndices, nsTransitionTable)
