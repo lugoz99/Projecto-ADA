@@ -39,6 +39,8 @@ def cut_process(ns, cs, cs_value, probabilities, states ,st):
 
     nodes = list(G.nodes())
     start_node = nodes[0]
+
+    # Se valida que el grafo no sean dos componentes
     if is_bipartite(G, start_node, start_node):
         st.info("El grafo ya está particionado, el proceso termina")
         return
@@ -114,9 +116,7 @@ def start_process(G, ns, cs, cs_value, min_partition, probabilities, states, st)
             draw_graph(G,st)
 
             arr1 = np.array(cut("", csC, cs_value, memory, probabilities, states))
-            arr2 = np.array(
-                cut(ns, cs_right_partition, cs_value, memory, probabilities, states)
-            )
+            arr2 = np.array(cut(ns, cs_right_partition, cs_value, memory, probabilities, states))
 
             partitioned_system = []
 
