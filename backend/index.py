@@ -17,6 +17,9 @@ from backend.strategies.cut_algoritmo import cut_process
 from backend.strategies.greedy import greedy_bipartite, plot_bipartite_process
 
 from backend.generator.probabilities import generatorProbabilities
+from backend.generator.calculateProbabilities_v3 import getStatus_v3
+
+from backend.candidateSystemGenerator.candidateGenerator import indexCandidateSystem
 
 def format_partition_output(partition_result):
     # Extraer las particiones de 'ns' y 'cs' junto con la distancia de EMD
@@ -77,6 +80,27 @@ if data is not None:
     st.text(searchStatus)
 
     st.divider()
+
+    st.subheader("¿Desea Crear un sistema Candidato?")
+
+    st.write("Llené los siguientes datos, teniendo en cuenta que solo se puede marginalizar variables que se encuentren continuas")
+    candidateSystem = st.text_input("Sistema candidato", "ABC")
+
+    execCandidateSystem = st.button("Obtener sistema candidato")
+
+    if execCandidateSystem:
+
+        result_matrix = indexCandidateSystem(result_matrix,candidateSystem, st)
+
+        st.subheader("Tabla de Sistema Candidato")
+        st.table(result_matrix)
+
+        states =getStatus_v3()
+
+        st.subheader("Tabla de Estados - Sistema candidato")
+        st.table(states)
+
+    
 
     with st.expander("Descomposición"):
 
