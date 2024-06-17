@@ -18,6 +18,7 @@ def productTensor_v4(row,col,data):
         return data["A"][1][col] * data["B"][1][col] * data["C"][1][col]*data["D"][0][col]
     if(row == 8):
         return data["A"][0][col] * data["B"][0][col] * data["C"][0][col]*data["D"][1][col]
+    
     if(row == 9):
         return data["A"][1][col] * data["B"][0][col] * data["C"][0][col]*data["D"][1][col]
     if(row == 10):
@@ -35,22 +36,6 @@ def productTensor_v4(row,col,data):
 
 def getStatus_v4():
     return [
-        [0, 0, 0, 0],
-        [1, 0, 0, 0],
-        [0, 1, 0, 0],
-        [1, 1, 0, 0],
-        [0, 0, 1, 0],
-        [1, 0, 1, 0],
-        [0, 1, 1, 0],
-        [1, 1, 1, 0],
-        [0, 0, 0, 1],
-        [1, 0, 0, 1],
-        [0, 1, 0, 1],
-        [1, 1, 0, 1],
-        [0, 0, 1, 1],
-        [1, 0, 1, 1],
-        [0, 1, 1, 1],
-        [1, 1, 1, 1],
         [0, 0, 0, 0],
         [1, 0, 0, 0],
         [0, 1, 0, 0],

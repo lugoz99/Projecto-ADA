@@ -55,26 +55,20 @@ data = st.file_uploader("Elige un Archivo")
 st.divider()
 
 st.subheader("Descomponer tabla de probabilidad")
-st.page_link("pages/index_descomponer.py",label="Descomponer Tabla de Probabilidad")
 
 if data is not None:
 
     st.header('Contenido del Documento')
-    st.write(pd.read_json(data))
+    #st.write(pd.read_json(data))
 
     # To convert to a string based IO:
     dataJson = json.loads(StringIO(data.getvalue().decode("utf-8")).read())
 
-    searchStatus, result_matrix, states = generatorProbabilities(dataJson)
+    result_matrix = dataJson['tableProbabilities']
+    states = dataJson['states']
 
     st.header('Tabla de Probabilidad')
     st.table(result_matrix)
-
-    st.text('Estado Buscado')
-    st.text(dataJson["stateSought"])
-
-    st.text('Valor Encontrado')
-    st.text(searchStatus)
 
     st.divider()
 
@@ -89,6 +83,9 @@ if data is not None:
             
         currentStatus = st.text_input("Estado Presente", "ABC")
         nextStatus = st.text_input("Estado Futuro", "ABC")
+
+        stateSought = st.text_input("Estado Buscado", "000")
+        
             
         # Every form must have a submit button.
         submitted = st.button("Procesar - Algoritmo Descomposición")
@@ -102,7 +99,7 @@ if data is not None:
             st.json(
                 format_partition_output(
                     decomposition(
-                        nextStatus, currentStatus, dataJson["stateSought"], result_matrix, states, st
+                        nextStatus, currentStatus, stateSought, result_matrix, states, st
                     )
                 )
             )
@@ -116,7 +113,9 @@ if data is not None:
             
         currentStatusDesc = st.text_input("Estado Presente Cut", "ABC")
         nextStatusDesc = st.text_input("Estado Futuro Cut", "ABC")
-            
+        
+        stateSoughtCut = st.text_input("Estado Buscado Cut", "000")
+        
         # Every form must have a submit button.
         submittedDesc = st.button("Procesar - Algoritmo Corte")
 
@@ -125,7 +124,7 @@ if data is not None:
             st.divider()
             st.subheader("Resultado Procesamiento de Datos")
 
-            cut_process(nextStatus, currentStatusDesc, dataJson["stateSought"], result_matrix, states, st)
+            cut_process(nextStatus, currentStatusDesc, stateSoughtCut, result_matrix, states, st)
 
 
     with st.expander("Estrategia Propia - Greedy"):

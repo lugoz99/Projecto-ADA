@@ -120,7 +120,6 @@ def decomposition(ns, cs, cs_value, probabilities, states, st):
                                     partitioned_system,
                                 )
                                 
-                                #print(emd_distance)
                                 if emd_distance < min_emd:
                                     min_emd = emd_distance
                                     mejor_particion = combinacion_actual

@@ -16,8 +16,10 @@ def getIndicesMarginalizar(states, state):
             availableIndices.append(i)
             csValue = str(state[i]) + csValue
 
+    
     for i in range(len(states)):
         key = tuple(states[i][j] for j in availableIndices)
+
 
         indices[key] = indices.get(key) + [i] if indices.get(key) else [i]
 
